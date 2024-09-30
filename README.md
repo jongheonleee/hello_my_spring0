@@ -122,6 +122,231 @@ public class HelloController {
 
 #### 👉 관심사의 분리와 MVC 패턴
 
+```java
+
+// 컨트롤러 처리 내용 자바 코드로 구현해보기 
+public class MethodCall3 {
+	public static void main(String[] args) throws Exception{
+        // 1. 쿼리스트링으로 넘어오는 값 -> ?year=2021&month=10&day=1
+		Map map = new HashMap();
+		map.put("year", "2021");
+		map.put("month", "10");
+		map.put("day", "1");
+
+        // 2. 리플렉션 API를 활용한 객체 생성 및 메서드 호출  
+		Model model = null;
+		Class clazz = Class.forName("com.fastcampus.ch2.YoilTellerMVC");
+		Object obj  = clazz.newInstance();
+		Method main = clazz.getDeclaredMethod("main", int.class, int.class, int.class, Model.class); // YoilTellerMVC.main(int year, int month, int day, Model model);
+		
+        Parameter[] paramArr = main.getParameters(); // main의 파라미터 정보를 가져옴
+		Object[] argArr = new Object[main.getParameterCount()]; // main의 파라미터 개수만큼 배열 생성
+		
+		for(int i=0;i<paramArr.length;i++) {
+			String paramName = paramArr[i].getName(); // 파라미터 이름
+			Class  paramType = paramArr[i].getType(); // 파라미터 타입
+			Object value = map.get(paramName); 
+
+            // 파라미터 형태가 다음과 같음 {2021, 10, 1, {}}
+            // 파라미터의 값을 맵에 저장해서 전달. 컨트롤러에서 사용하게끔 만듦 
+			// paramType중에 Model이 있으면, 생성 & 저장 
+			if(paramType==Model.class) {
+				argArr[i] = model = new BindingAwareModelMap(); 
+			} else if(value != null) {  // map에 paramName이 있으면,
+				// value와 parameter의 타입을 비교해서, 다르면 변환해서 저장  
+				argArr[i] = convertTo(value, paramType);				
+			} 
+		}
+		
+		// Controller의 main()을 호출 - YoilTellerMVC.main(int year, int month, int day, Model model)
+		String viewName = (String)main.invoke(obj, argArr);
+        
+		// 텍스트 파일을 이용한 rendering
+		render(model, viewName);			
+	} 
+	
+    // 데이터 타입 변환 메서드 
+	private static Object convertTo(Object value, Class type) {
+		if(type==null || value==null || type.isInstance(value)) // 타입이 같으면 그대로 반환 
+			return value;
+
+		// 타입이 다르면, 변환해서 반환
+		if(String.class.isInstance(value) && type==int.class) { // String -> int
+			return Integer.valueOf((String)value);
+		} else if(String.class.isInstance(value) && type==double.class) { // String -> double
+			return Double.valueOf((String)value);
+		}
+			
+		return value;
+	}
+	
+    // 뷰 페이지 렌더링 메서드 
+	private static void render(Model model, String viewName) throws IOException {
+		String result = "";
+		
+		// 1. 뷰의 내용을 한줄씩 읽어서 하나의 문자열로 만든다.
+		Scanner sc = new Scanner(new File("src/main/webapp/WEB-INF/views/"+viewName+".jsp"), "utf-8");
+		
+		while(sc.hasNextLine())
+			result += sc.nextLine()+ System.lineSeparator();
+		
+		// 2. model을 map으로 변환 
+		Map map = model.asMap();
+		
+		// 3.key를 하나씩 읽어서 template의 ${key}를 value바꾼다.
+		Iterator it = map.keySet().iterator();
+		
+		while(it.hasNext()) {
+			String key = (String)it.next();
+
+			// 4. replace()로 key를 value 치환한다.
+			result = result.replace("${"+key+"}", ""+map.get(key));
+		}
+		
+		// 5.렌더링 결과를 출력한다.
+		System.out.println(result);
+	}
+}
+
+/* [실행결과] 
+paramArr=[int year, int month, int day, org.springframework.ui.Model model]
+argArr=[2021, 10, 1, {}]
+viewName=yoil
+[after] model={year=2021, month=10, day=1, yoil=금}
+<%@ page contentType="text/html;charset=utf-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<html>
+<head>
+	<title>YoilTellerMVC</title>
+</head>
+<body>
+<h1>2021년 10월 1일은 금요일입니다.</h1>
+</body>
+</html>
+*/
+
+
+```
+
+```java
+// 디스패처 서블릿 자바로 구현해보기 
+    // (0) 요청 받고 적절한 메서드에게 위임
+    // (1) 요청 데이터 타입 변환 - http는 텍스트 기반 프로토콜이므로 String을 알맞게 타입 변환해야함
+    // (2) 응답 페이지 위치 생성기 
+    // (3) 뷰 페이지 렌더링
+
+// 요청 url : http://localhost/ch2/myDispatcherServlet?year=2021&month=10&day=1
+// @WebServlet = @Controller + @RequestMapping
+@WebServlet("/myDispatcherServlet")  
+public class MyDispatcherServlet extends HttpServlet {
+    
+    // HttpServletRequest는 요청 정보를 저장하고 있는 객체를 의미함
+    // HttpServletResponse는 응답 정보를 저장하고 있는 객체를 의미함
+	@Override
+	public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 1. 작업에 필요한 정보 및 객체 생성 
+		Map    map = request.getParameterMap();
+		Model  model = null;
+		String viewName = "";
+		
+		try {
+            // 2. 리플렉션 API를 활용한 객체 생성 및 메서드 호출
+			Class clazz = Class.forName("com.fastcampus.ch2.YoilTellerMVC");
+			Object obj = clazz.newInstance();
+			
+      		// 2-1. main 메서드의 정보 조회 
+			Method main = clazz.getDeclaredMethod("main", int.class, int.class, int.class, Model.class);
+			
+            // 2-2. main메서드의 매개변수 목록(paramArr)을 읽어서 메서드 호출에 사용할 인자 목록(argArr)을 만든다.
+			Parameter[] paramArr = main.getParameters();
+			Object[] argArr = new Object[main.getParameterCount()];
+
+            // 2-3. main메서드의 매개변수 목록을 순회하면서, 각 매개변수의 타입과 이름을 조회하고, map에서 값을 꺼내서 변환해서 저장한다.
+			for(int i=0;i<paramArr.length;i++) {
+				String paramName = paramArr[i].getName();
+				Class  paramType = paramArr[i].getType();
+				Object value = map.get(paramName);
+
+				// paramType중에 Model이 있으면, 생성 & 저장 
+				if(paramType==Model.class) {
+					argArr[i] = model = new BindingAwareModelMap();
+				} else if(paramType==HttpServletRequest.class) {
+					argArr[i] = request;
+				} else if(paramType==HttpServletResponse.class) {
+					argArr[i] = response;					
+				} else if(value != null) {  // map에 paramName이 있으면,
+					// value와 parameter의 타입을 비교해서, 다르면 변환해서 저장 
+					String strValue = ((String[])value)[0];	// getParameterMap()에서 꺼낸 value는 String배열이므로 변환 필요 
+					argArr[i] = convertTo(strValue, paramType);				
+				} 
+			}
+			
+			// 3. Controller의 main()을 호출 - YoilTellerMVC.main(int year, int month, int day, Model model)
+			viewName = (String)main.invoke(obj, argArr); 	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+				
+		// 4. 텍스트 파일을 이용한 rendering
+		render(model, viewName, response);			
+	} 
+	
+    // (1) 데이터 타입 변환 메서드
+	private Object convertTo(Object value, Class type) {
+		if(type==null || value==null || type.isInstance(value)) // 타입이 같으면 그대로 반환 
+			return value;
+		
+		// 타입이 다르면, 변환해서 반환
+		if(String.class.isInstance(value) && type==int.class) { // String -> int
+			return Integer.valueOf((String)value);
+		} else if(String.class.isInstance(value) && type==double.class) { // String -> double
+			return Double.valueOf((String)value);
+		}
+			
+		return value;
+	}
+	
+    // (2) 뷰 페이지 리소스 위치 문자열로 만들어서 반환 
+	private String getResolvedViewName(String viewName) {
+		return getServletContext().getRealPath("/WEB-INF/views") +"/"+viewName+".jsp";
+	}
+	
+    // (3) 뷰 페이지 렌더링 메서드 
+	private void render(Model model, String viewName, HttpServletResponse response) throws IOException {
+		String result = "";
+		
+		response.setContentType("text/html");
+		response.setCharacterEncoding("utf-8");
+		PrintWriter out = response.getWriter();
+		
+		// 1. 뷰의 내용을 한줄씩 읽어서 하나의 문자열로 만든다.
+		Scanner sc = new Scanner(new File(getResolvedViewName(viewName)), "utf-8");
+		
+		while(sc.hasNextLine())
+			result += sc.nextLine()+ System.lineSeparator();
+		
+		// 2. model을 map으로 변환 
+		Map map = model.asMap();
+		
+		// 3.key를 하나씩 읽어서 template의 ${key}를 value바꾼다.
+		Iterator it = map.keySet().iterator();
+		
+		while(it.hasNext()) {
+			String key = (String)it.next();
+
+			// 4. replace()로 key를 value 치환한다.
+			result = result.replace("${"+key+"}", map.get(key)+"");
+		}
+		
+		// 5.렌더링 결과를 출력한다.
+		out.println(result);
+	}
+}
+
+```
+
+
 <br>
 
 #### 👉 서블릿과 JSP
