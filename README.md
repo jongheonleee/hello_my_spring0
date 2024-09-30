@@ -110,6 +110,70 @@ public class HelloController {
 >     - (2-2) web app의 개별 부분 설정
 >       - web app/WEB-INF/web.xml
 
+<br>
+
+#### 👉 HTTP 요청과 응답 
+
+<br>
+
+#### 👉 텍스트와 바이너리, MIME, Base64
+
+<br>
+
+#### 👉 관심사의 분리와 MVC 패턴
+
+<br>
+
+#### 👉 서블릿과 JSP
+
+<br>
+
+#### 👉 @RequestParam과 @ModelAttribute
+
+<br>
+
+#### 👉 @RequestMapping
+
+<br>
+
+#### 👉 회원가입 화면 작성하기 
+
+<br>
+
+#### 👉 @GetMapping과 @PostMapping
+
+<br>
+
+#### 👉 redirect와 forward
+
+<br>
+
+#### 👉 쿠키란?
+
+<br>
+
+#### 👉 세션이란?
+
+<br>
+
+#### 👉 예외처리
+
+<br>
+
+#### 👉 DispatcherServlet 파헤치기
+
+<br>
+
+#### 👉 데이터 변환과 검증 
+
+<br>
+
+#### 👉 IntelliJ 사용법 
+
+<br>
+
+
+
 
 ## 📌 03. Spring DI와 AOP 
 
