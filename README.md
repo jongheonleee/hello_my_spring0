@@ -346,54 +346,481 @@ public class MyDispatcherServlet extends HttpServlet {
 
 ```
 
+> - 스프링의 경우 reflection API를 잘 활용함
 
 <br>
 
 #### 👉 서블릿과 JSP
 
+> - 서블릿과 컨트롤러의 비교, 스프링은 서블릿이 발전된 형태 
+> - <서블릿의 생명주기>
+> - JSP란? 'Java Server Pages'의 약자로, 서블릿과 유사한 형태임
+> - <% ~ %> 안에 자바 코드 작성함
+> - 결국에는 자바 클래스와 유사한 형태임
+> - <JSP 호출 과정>
+> - 요청할 때 그때 서블릿을 생성하고 등록함, lazy-init
+> - 스프링은 이 부분을 개선하고자 미리 등록해서 사용하게 만듦, early-init
+> - <JSP와 서블릿으로 변환된 JSP의 비교>
+> - JSP의 기본 객체는 생성없이 사용할 수 있는 객체를 의미함
+>   - service 메서드의 lv
+>   - request, response, pageContext, ...
+
+<br>
+
+#### 👉 유효범위(scope)와 속성(attribute)
+
+> - HTTP 특징은 stateless임. 상태정보를 저장하지 않음
+>   - 이에 따라, '저장소'가 필요함
+>   
+> - '저장소'는 범위에 따라서 4개로 구분함. 크게 2가지 특징이 있음
+>   - (1) 접근범위
+>   - (2) 생존기간
+>   
+> - '저장소'는 기본적으로 '맵'으로 구성되어 있음
+> - <전체 스코프와 속성 그림> 
+>   - (1) pageContext
+>     - lv를 저장하는 저장소
+>     - 기본객체 request, response가 있음
+>     - 특정 page 내에서만 접근 가능함(읽기, 쓰기). 다른 페이지에서 접근하지 못함
+>     - 이때, 값을 사용할 때는 EL 태그나 <%= ~ %>를 사용함
+> 
+>   - (2) application
+>     - web application 전체에서 접근 가능한 저장소
+>     - 여러 페이지에서 접근 가능함. 쓰기할 때는 setAttribute()를 사용함. 읽기할 때는 getAttribute()를 사용함
+>     - 전체 application에서 공유해서 사용하는 저장소이기 때문에 특정 상용자의 데이터를저장하는 것은 바람직하지 않음
+>       - 이로 인해 session 등장
+>   
+>   - (3) session
+>     - 특정 클라이언트에 대한 개별 저장소
+>     - 클라이언트마다 개별적으로 할당되는 저장소이기 때문에 개별적인 데이터를 저장하기에 적합함. 예를들어, id, email 등이 있음
+>     - 세션은 쿠키를 이용해서 이 세션 객체가 어떤 사람 것인지 연결해주는 역할을함
+>     - 세션에는 id, email, ... 등이 있음
+>     - 세션은 쿠키를 이용해서 이 세션 객체가 어떤 사람 것인지 연결해주는 역할을 함
+>     - 세션에는 id, 장바구니, ... 을 담기에 좋음
+>     - 무분별한 세션 사용은 좋지 않음. 사용자마다 1개 개별 저장소가 부여되기 때문에 사용자수가 많으면 많을수록 성능은 저하됨
+>     - 서버 부담이 젤 큰 객체. 최소한의 데이터만 저장해야함
+>   
+>   - (4) request 
+>     - 사용자마다 독립적이며 요청할 때 마다 생성되는 객체임
+>     - 주로 요청 보내는 시점부터 작업이 완료될 때 까지 유효함, forward 처리가 그 예시임
+>     - forward 처리하면 다른 jsp 페이지에서도 request 객체를 사용할 수 있음
+>     - 가능하면 request 객체를 최대한 활용해보고 안되면 session 객체를 사용함
+
+
+<br>
+
+#### 👉 URL 패턴
+
+> - @WebServlet으로 서블릿을 URL에 매핑할 때 사용
+> - 패턴 종류에는 크게 4가지가 있음
+>   - (1) exact mapping : 정확히 일치하는 경우
+>   - (2) path mapping : 일부 경로가 일치하는 경우
+>   - (3) extension mapping : 확장자가 일치하는 경우
+>   - (4) default mapping : 모든 요청에 대한 매핑
+> 
+> - 스프링에서도 url pattern이 있음. @RequestMapping을 사용함
+> - <URL 패턴, Servlet Context> 
+> - 스프링에서는 DispatcherServlet이 Children과 ServletMappingr을 위와 유사한 형태로 서블릿(컨트롤러)들을 가지고 있음
+> - 즉, DispatcherServlet이 URL 매핑과 그에 대한 서블릿(컨트롤러)들을 보관하고 관리하고 있음
+> - 모든 요청은 DispatcherServlet이 받게 되어 있음(Front-Controller). servlet-mapping 을 보면 url-pattern이 '/'로 되어 있음
+
+<br>
+
+#### 👉EL 태그 
+> - EL 태그란? Expression Language의 약자로, JSP에서 사용하는 표현식 언어를 의미함
+> - <%= ~ %> 을 ${ ~ } 형식으로 작성하게끔 바꿔줌. 이는 여러면에서 편리한 경우가 많음
+> - EL 태그에서 특정 값을 사용할 때 scope를 탐색해서 해당 값을 조회함
+> - <스코프 체인 탐색>
+> - 자바에서는 "1" + 1 -> "11" 이지만, EL에서는 "1" + 1 -> 2로 계산함
+> 
+> - empty 는 크게 2가지 부분을 확인해줌
+>   - (1) null 여부
+>   - (2) 빈 컬렉션 배열
+> - 위의 조건을 하나라도 충족하면 true를 반환함
+> - EL은 lv를 사용못함. 저장소에 저장된 것을 사용함
+
+<br>
+
+#### 👉JSTL
+> - JSTL이란? JSP Standard Tag Library의 약자로, JSP에서 사용하는 표준 태그 라이브러리를 의미함
+> - 접두사 <c 사용. 형식화에서는 <fmt 사용
+> - 맨위에 설정 라인에 넣어줘야함
+
+
+<br>
+
+#### 👉Filter
+> - 공통적인 요청 전처리와 응답 후처리에 사용함. 주로 로깅, 인코딩, 수행시간 측정 ... 에 사용함
+> - <Filter 적용 그림>
+> - <Filter 적용 그림2>
+> - 필터는 n개로 구성할 수 있음. AOP 기능과 유사함
+
+
 <br>
 
 #### 👉 @RequestParam과 @ModelAttribute
+
+```java
+// RequestParamTest
+
+
+// SetterCall
+
+```
+
+> - @RequestParam은 요청 파라미터를 연결할 매개변수에 붙이는 애노테이션. 기본적으로 생략 가능함
+> - 컨트롤러에서 파라미터가 필수 입력일 때는 예외처리하고 그게 아니면 안해도됨
+> - 컨트롤러에 여러개의 파라미터가 전달되는 경우. 해당 파라미터를 객체로 묶어서 처리하는게 유용함
+> - 객체에 값이 담기는 작업을 내부적으로 어떻게 돌아가는지 보여줌. 데이터 바인드에 의해 처리됨
 
 <br>
 
 #### 👉 @RequestMapping
 
+> - 적용대상을 Model 의 속성으로 자동추가해주는 애너테이션
+> - 반환타입 또는 컨트롤러 메서드의 매개변수에 적용 가능함
+> - <매개변수, 반환 타입에 @ModelAttribute 적용>
+> - 컨트롤러 파라미터에서 참조형 매개변수 앞에 @ModelAttribute를 생략할 수 있음
+> - 컨트롤러 매개변수에 붙일 수 있는 애노테이션은 2개임
+>   - (1) @RequestParam - 기본형, String에 사용함
+>   - (2) ModelAttribute - 참조형(객체)
+>
+
+<br>
+
+#### 👉 WebDataBinder 
+
+> - <웹데이터바인더그림>
+> - 컨트롤러 메서드에서 적용되는 객체 
+> - 클라이언트 요청에 담겨있는 데이터에 대한 전처리 작업을 담당함
+> - 크게 2가지 작업을 처리함
+>   - (1) 타입변환 : 데이터를 변환한 결과나 에러를 bindingResult에 저장함
+>   - (2) 검증 : 타입 변환을 거친 데이터에 대해 데이터 검증을 처리하고 이 결과를 bindingResult에 저장함
+> - 타입 변환, 데이터 검증을 처리한 결과나 에러를 bindingResult에 담고 이를 컨트롤러에 넘겨줌
+> - 컨트롤러는 bindingResult를 가지고 작업 처리를 할 수 있게됨
+> - @ExceptionHandler가 붙은 예외처리하는 메서드에서도 bindingResult를 사용할 수 있음
+
 <br>
 
 #### 👉 회원가입 화면 작성하기 
+
+> - form은 기본적으로 GET 방식으로 전송함. 하지만, 주로 POST 방식으로 설정헤서 요청하는 경우가 많음
+>   - action은 요청을 보낼 URL
+>   - method 요청을 보내는 메서드 형식 - GET, POST
+>   - onsubmit은 이벤트 발생할 때 자스로 핸들링할 함수를 연결함
+> - 브라우저에서 데이터를 전송할 때 아스키가 아닌 것들은 URL 인코딩 처리됨
+> - 특정 필드에 여러 데이터가 담긴 경우 ${paramValues}와 같이 작성해야함
+> - 프론트단에서는 이벤트가 발생했을 때 자스로 1차 데이터 검증을 처리할 수 있음
+
 
 <br>
 
 #### 👉 @GetMapping과 @PostMapping
 
+```java
+
+// 1. 
+model.addAttribute("msg", msg);
+return "redirect:/register/add";
+
+// 2. 
+return "redirect:/register/add?msg="+msg;
+
+
+// RequestMappingTest
+
+
+```
+
+> - @RequestMapping에 method 쓰는 방식 대신에 사용. 간략하게 사용할 수 있음
+> - @RequestMapping을 간단하게 쓸수 있는 것이 @GetMapping과 @PostMapping임
+> - 회원등록 실패시 리다이렉트를 처리할 때, 컨트롤러 처리 과정을 보면 위의 두 코드는 서로 일치하게 동작함
+> - @RequestMapping의 URL 패턴 처리는 아래와 같음
+>   - (1) exact mapping : 정확히 일치하는 경우
+>   - (2) path mapping : 일부 경로가 일치하는 경우
+>   - (3) extension mapping : 확장자가 일치하는 경우
+
+<br>
+
+#### 👉 URL 인코딩 - 퍼센트 인코딩
+
+> - URL에 포함된 non-ASCII 문자를 문자 코드(16 진수) 문자열로 변환함
+> - 요청을 받은 서버가 어떤 OS, 어떤 인코딩을 사용하는지 알 수 없음. 그래서 아스키를 활용해야함(인코딩 처리)
+> - <URL 인코딩 처리 이미지>
+> - 문자 코드를 UTF-8 문자열로 변환하는 작업. 문자코드(숫자) <-> 문자열
+> - 브라우저에서 데이터를 전송할 때 브라우저가 URL 인코딩 처리해서 전송함
+
 <br>
 
 #### 👉 redirect와 forward
+
+> - <redirect 처리 과정>
+> - <forward 처리 과정>
+> - redirect는 요청이 총 2번 이루어지고 각 요청의 request 객체는 서로 다른 객체임
+> - 하지만, forward는 요청이 한 번이고 request 객체도 동일한 객체임
+
+<br>
+
+#### 👉 스프링에서 Redirect와 Forward 처리 과정
+
+> - <DS 그림>
+> - redirect가 일어날 경우, DS는 RedirectView를 호출해서 리다이렉트를 담은 응답 정보를 생성하고 클라이언트에게 전달함
+> - 컨트롤러에서 String인 뷰 이름을 반환하면 DS는 InternalResourceViewResolver를 통해서 뷰이름을 해석해서 실제 리소스 위치를 생성함
+> - DS는 다시 해당 위치 정보를 JstlView에게 전달하고 JstlView는 해당 JSP에게 Model을 넘겨줌
+> - JSP는 최종 응답을 생성해서 클라이언트에게 전달함
+
+
 
 <br>
 
 #### 👉 쿠키란?
 
+> - 쿠키는 클라이언트 식별 기술
+> - 이름과 값의 쌍으로 구성된 작은 정보, 아스키 문자만 가능함
+>   - 도메인, 경로, 유효기간, 아이디, ... 을 주로 저장함
+> - 서버에서 생성해서 브라우저에 저장함
+> - 서버 요청시 domain, path 가 일치해야 전송함
+> - HTTP 응답/요청 헤더에 쿠기가 등록된 상태로 전달됨
+> 
+> - 쿠키 생성 및 삭제 
+> - <쿠키의 생성>
+> - <쿠키의 삭제와 변경>
+> - 쿠키 삭제할 때는 유효기간을 0으로 설정해주면됨
+> - 쿠키에 한글, ... 을 저장할 때는 URLEncoder를 통해 인코딩해서 저장해야함
+
 <br>
 
 #### 👉 세션이란?
 
+> - 세션은 서로 관련된 요청들을 하나로 묶은 것을 의미함
+> - 브라우저마다 세션(개별 저장소)을 서버에서 제공함
+> - 쿠키는 브라우저에 저장되고 세션은 서버에 저장됨
+> - 세션을 삭제하는 방법에는 2가지가 있음
+>   - (1) 수동종료 : invalidate()
+>   - (2) 자동종료 : time-out
+> - 브라우저에서 세션을 사용하기 위해 쿠키에 저장해둠
+> - 이를 통해 추후에 요청을 보낼 때도 브라우저에서 온 요청이 이전의 요청과 같은지 다른지 판단할 수 있음
+
 <br>
 
-#### 👉 예외처리
+#### 👉 쿠키 VS 세션
+
+> - <쿠키 vs 세션>
+
+<br>
+
+#### 👉 세션 실습
+
+> - 개발을 진행하기 앞서 항상 그림을 그려서 작업틀을 구상해 놓아야함
+> - 그림 그리는 것이 설계임
+> - 메인 화면에서 메뉴 부분에서 Login/Logout을 보여줄 때 세션 스코프에 아이디가 있는지 없는지 여부로 처리함
+> - 로그인 후, 게시판으로 이동시킬 때 각 페이지마다 URL이 어떻게 되는지 from, to 형식으로 직접 작성해보기
+>   - 이 과정을 통해 알 수 있는 것은 from url을 저장해서 사용한다는 사실임
+> - GET 방식에 쿼리스트링을 활용함. ?toURL='~~'에 from URL을 담고 로그인 페이지에서 input hidden에 from URL 저장해둠
+> - 로그인 성공시 from URL로 이동시킴
+> - 세션은 서버에 부담이 가는 작업. 따라서 유지기간이 짧을수록 좋음
+> - <세션을 언제 시작할까 이미지>
+> 
+> - 위 과정을 처리하기 위해 세션이 필요없는 고세서는 session=false 처리함. 필요하다면 session=true 처리
+> - session=false는 세션을 없애는게 아니라 session을 새로 생성 안한다는 의미임. 즉, session=false는 기존의 세션이 끊기는게 아님
+> - 이를 적용하기 위해선 <%@ page session="false" %>를 JSP 상단에 적어 주면됨
+> - @CookieValue 애노테이션이 있음. 해당 애노테이션은 쿠키에 존재하는 특정 이름의 값이 있으면 컨트롤러의 메서드 파라미터로 받아서 쓸 수 있게함
+> - @CookieValue("id") String coolieId 형식으로 컨트롤러 메서드의 파라미터에 사용함
+
+
+
+<br>
+
+#### 👉 예외처리 1
+
+```java
+// ExceptionController - 특정 컨트롤러에서 발생하는 예외 처리기 
+
+
+// GlobalController - 전역 예외 처리기 
+
+
+```
+
+> - 컨트롤러에서 발생되는 공통에러를 처리하는 메서드를 만들 수 있음. 이때, 사용되는 것이 @ExcceptionHandler 애노테이션임
+> - 어떤 예외일 때 해당 메서드가 호출되는지 지정할 수 있음
+> - 그렇게 하면 해당 예외들은 @ExceptionHandler에 명시해야함
+> - 이를 통해서 컨트롤러 내부에서 발생되는 중복된 예외처리 로직을 공통적으로 관리할 수 있음
+> 
+> - 여러 컨트롤러에서 발생하는 중복된 예외 처리 로직을 하나의 클래스로 효율적으로 다룰 수 있음. 이때 사용하는 애노테이션이 @ControllerAdvice임
+> - 만약 @ExceptionHandler와 @ControllerAdvice가 동시에 적용된 경우 가까운 위치인 @ExceptionHandler가 호출됨
+> - @ControllerAdvice에는 패키지를 지정해 줄 수 있음. 그러면 @ControllerAdvice는 해당 페키지에서 발생한 예외들만 처리하게됨
+> 
+> - 위에 부분을 요약하자면 @ExceptionHadnler를 통해 컨트롤러에서 발생하는 예외를 처리할 수 있음(개별 예외 처리)
+> - @ControllerAdvice로 전역 예외 처리 클래스를 작성 가능함(물론, 적용할 패키지 영역 지정 가능함)
+
+<br>
+
+#### 👉 @ResponseStatus
+
+
+```java
+// (1) 예외 처리 매서드에 붙이는 경우
+
+// (2) 사용자 예외 클래스에 붙이는 경우 
+
+// JSP 맨 위에 선언 라인에 <%@ page isErrorPage="true" %>를 추가해야함
+
+// <error-page> 태그를 사용함
+
+// servlet-context.xml에 등록함 
+```
+
+
+> - @ResponseStatus는 응답 메시지의 상태 코드를 변경할 때 사용함
+> - 주로 예외 처리 메서드에 붙임. 에러가 발생했을 때 에러 페이지를 보여주면, 응답 코드가 200이됨
+> - 하지만 에러에 대핸 처리는 200이면 안됨. 이를 4xx, 5xx로 변환해야함
+> - 주로 2가지 경우에 사용함
+>   - (1) 예외 처리 매서드에 붙이는 경우
+>   - (2) 사용자 예외 클래스에 붙이는 경우 
+> - 컨트롤러에서 model의 객체에 예외 정보를 저장하지 않아도 error.jsp에서 pageContext의 exception 객체를 통해 예외 정보를 사용할 수 있음
+> - 단, JSP 맨 위에 선언 라인에 <%@ page isErrorPage="true" %>를 추가해야함
+> - web.xml에서 에러 코드별로 error-page를 지정할 수있음. 이때 <error-page> 태그를 사용함
+> - SimpleMappingExceptionResolver를 통해서도 특정 예외 종류가 발생했을 때 보여줄 에러 페이지를 지정할 수 있음
+> - 예외 종류 별 뷰 매핑에 사용, servlet-context.xml에 등록함
+
+<br>
+
+#### 👉 예외가 발생했을 때 처리하는 흐름
+
+```java
+// DispatcherServlet.properties 설정 파일 
+
+```
+
+> - ExceptionResolver 처리 과정 설명, 컨트롤러에서 발생할 예외가 DS에 넘어옴
+> - DS에는 handlerExceptionResolver(DS의 iv)에 다음과 같이 3개의 예외 처리기(ExcptionHResolver)가 존재함
+>   - (1) ExceptionHandlerResolver 
+>     - @ExceptionHandler를 사용한 예외 처리
+>   
+>   - (2) ResponseStatusExceptionResolver
+>     - @ResponseStatus를 사용한 예외 처리, web.xml 참고 
+>   
+>   - (3) DefaultHandlerExceptionResolver
+>     - 스프링에 정의된 예외의 상태코드 500을 400, 500 으로 바꿔줌
+> 
+> - 다음 3가지는 DS가 가지고 있는 예외 처리 기본 전략임
+> - 해당 전략은 DispatcherServlet.properties에 정의되어 있음
+
+<br>
+
+#### 👉 스프링에서의 예외 처리
+
+> - (1) 컨트롤러 메서드 내에서 try-catch로 예외 처리
+> - (2) 같은 컨트롤러 안에 @ExceptionHandler 메서드가 처리됨
+> - (3) 예외 처리를 해주는 별도의 클래스를 정의한 @ControllerAdvice, @ExceptionHandler를 사용함
+> - (4) 예외 종류별로 뷰 지정, SimpleMappingExceptionResolver를 사용함
+> - (5) 응답 상태 토드별로 뷰 지정, <error-page>
+
 
 <br>
 
 #### 👉 DispatcherServlet 파헤치기
 
+> - <DispatcherServlet 그림>
+> - <HandlerMapping 처리>
+> - <HandlerAdapter 처리>
+> - <ViewResolver 처리>
+> - <DispatcherServlet 전체 그림>
+> - 서블릿은 기본적으로 '입력/처리/출력' 형식으로 구성됨
+> - 이를 효율적으로 처리하기 위해선 그 앞단에 DS를 둬서 전처리 작업을 처리함(Front-Controller)
+> - 물론 DS는 전처리 말고도 여러 작업을 처리함 
+> 
+> - 특정 URL로 요청이 들어오면 DS는 HandlerMapping에 등록된 메서드 중에 해당 URL을 처리해 주는 메서드를 호출함
+> 
+> - DS가 바로 Controller를 호출하는 것이 아니라 HandlerAdapter를 통해서 특정 Controller를 호출함
+> - 느슨한 연결을 통해서 변경에 유리하게 구성함. 이를 통해서 DS는 Controller만 호출할 수 있는게 아니라 Servlet ... 여러 객체들을 호출할 수 있음
+> 
+> - DS의 ViewResolver는 컨트롤러로부터 전달받은 뷰 이름에 '접두사'와 '접미사'를 붙여서 실제 뷰 이름을 반환함
+> 
+> - dispatcherServlet.properties에는 DS의 기본 전략이 정의되어 있음, 주로 전략 패턴으로 구성됨
+> - DispatcherServlet의 주요 메서드 처리는 다음과 같음
+>   - (1) initStrategies(ApplicationContext context) 
+>     - 기본 전략을 초기화함
+>   
+>   - (2) doService(HttpServletRequest request, HttpServletResponse response)
+>     - doDispatch() 메서드를 호출함
+>   
+>   - (3) doDispatch(HttpServletRequest request, HttpServletResponse response)
+>     - 실제 요청 처리
+>   
+>   - (4) processDispatchResult(HttpServletRequest request, HttpServletResponse response, HandlerExecutionChain mappedHandler, ModelAndView mv, Exception exception)
+>     - 예외가 발생했는지 확인하고, 발생하지 않았으면 render() 메서드를 호출함
+>   
+>   - (5) render(ModelAndView mv, HttpServletRequest request, HttpServletResponse response)
+>     - 응답 결과를 생성해서 전송함
+
+
 <br>
 
-#### 👉 데이터 변환과 검증 
+#### 👉 데이터 변환
+
+```java
+// RegisterController 데이터 변환 기능 처리 
+
+```
+
+> - <WebDataBinder 그림>
+> - WebDataBinder가 데이터 변환과 검증을 처리함
+> - String인 "2021/12/31" 을 Date로 변환하는 기능 추가함
+> - @InitBinder로 메서드를 정의하여 변환기를 등록할 수 있음
+> - @DateTimeFormat을 사용해서 직접 명시해서 사용할 수도 있음
+> - @InitBinder는 특정 클래스에서 사용할 변환기를 등록함. 여러 클래스에서 적용할 변환기 등록은 WebBinderInitializer를 구현한 후 등록함
+> 
+> - (1) PropertyEditor
+>   - 양방향 타입 변환
+>   - (String -> 타입, 타입 -> String), 특정 타입이나 이름의 필드에 적용 가능함
+>   - 디폴트 PropertyEditor는 스프링이 제공함
+>   - 커스텀 PropertyEditor는 사용자가 직접 구현, PropertyEditorSupport를 상속하면 편리함
+> 
+> - (2) Converter 
+>   - 단방향 타입 변환
+>   - (타입 A -> 타입 B)
+>   - PropertyEditor는 iv를 사용하기 때문에 stateful함. Converter는 stateless임.
+>   - <converter 이미지>
+> 
+>  - (3) Formatter
+>    - 양방향 타입 변환
+>    - (String -> 타입, 타입 -> String)
+>    - 바인딩할 필드에 적용. @NumberFormat, @DateTimeFormat, 등이 있음
+>
 
 <br>
 
-#### 👉 IntelliJ 사용법 
+#### 👉 데이터 검증
+
+```java
+// Validator 인터페이스
+
+// UserValidator 클래스
+
+
+// Validator를 이용한 검증 자동 
+
+// 글로벌 Validator servlet-context.xml에 등록하기 
+
+
+// registerController, UserValidator 
+
+// MessageSource 인터페이스 
+
+```
+
+> - Validator란? 객체를 검증하기 위한 인터페이스, 객체 거증기 구현에서 사용함 
+> - 하나의 Validator로 여러 객체를 검증할 때, 글로벌 Validator로 등록함
+> - 글로벌 Validator로 등록하는 방법은 위에와 같음 
+> - 글로벌 Validator와 로컬 Validator를 동시에 적용할 수 있음
+> - 이때, binder.addValidators(new 사용할 검증기()) 형식으로 추가해주면됨
+>
+> - MessageSource
+> - 다양한 리소스(파일, 배열)에서 메시지를 읽기 위한 인터페이스
+> - MessageSource를 사용하려면 프로퍼티 파일을 메시지 소스로 하는 ResourceBundleMessageSource를 등록함
+> - 이때, error_message.properties 파일을 만들어서 에러 메시지를 작성함
 
 <br>
 
