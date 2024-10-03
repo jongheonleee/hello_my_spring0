@@ -191,6 +191,7 @@ public class HelloController {
 #### 👉 Base64
 
 > - <img src="/images/Base64.png" width="400" height="400"/>
+> - <img src="/images/Base642.png" width="400" height="400"/>
 > - 64 진법을 활용함, 데이터를 표현할 때 64개의 문자로 표현함
 > - 64개 -> 2^6 -> 6비트로 구성된 데이터
 > - 데이터를 6비트로 쪼갬
@@ -440,21 +441,25 @@ public class MyDispatcherServlet extends HttpServlet {
 
 ```
 
-> - 스프링의 경우 reflection API를 잘 활용함
+> - <img src="/images/관심사의분리이론1.png" width="400" height="400"/>
+> - <img src="/images/관심사의분리이론2.png" width="400" height="400"/>
+> - <img src="/images/관심사의분리이론3.png" width="400" height="400"/>
+
 
 <br>
 
 #### 👉 서블릿과 JSP
 
 > - 서블릿과 컨트롤러의 비교, 스프링은 서블릿이 발전된 형태 
-> - <서블릿의 생명주기>
+> - <img src="/images/서블릿생명주기.png" width="400" height="400"/>
 > - JSP란? 'Java Server Pages'의 약자로, 서블릿과 유사한 형태임
 > - <% ~ %> 안에 자바 코드 작성함
 > - 결국에는 자바 클래스와 유사한 형태임
-> - <JSP 호출 과정>
+> - <img src="/images/JSP호출과정.png" width="400" height="400"/>
 > - 요청할 때 그때 서블릿을 생성하고 등록함, lazy-init
 > - 스프링은 이 부분을 개선하고자 미리 등록해서 사용하게 만듦, early-init
 > - <JSP와 서블릿으로 변환된 JSP의 비교>
+> - <img src="/images/JSP와서블릿비교.png" width="400" height="400"/>
 > - JSP의 기본 객체는 생성없이 사용할 수 있는 객체를 의미함
 >   - service 메서드의 lv
 >   - request, response, pageContext, ...
@@ -463,6 +468,14 @@ public class MyDispatcherServlet extends HttpServlet {
 
 #### 👉 유효범위(scope)와 속성(attribute)
 
+
+> - <img src="/images/전체스코프와속성그림.png" width="400" height="400"/>
+> - <img src="/images/전체스코프와속성그림1.png" width="400" height="400"/>
+> - <img src="/images/전체스코프와속성그림2.png" width="400" height="400"/>
+> - <img src="/images/전체스코프와속성그림3.png" width="400" height="400"/>
+> - <img src="/images/전체스코프와속성그림6.png" width="400" height="400"/>
+> - <img src="/images/전체스코프와속성그림4.png" width="400" height="400"/>
+> - <img src="/images/전체스코프와속성그림5.png" width="400" height="400"/>
 > - HTTP 특징은 stateless임. 상태정보를 저장하지 않음
 >   - 이에 따라, '저장소'가 필요함
 >   
@@ -471,7 +484,6 @@ public class MyDispatcherServlet extends HttpServlet {
 >   - (2) 생존기간
 >   
 > - '저장소'는 기본적으로 '맵'으로 구성되어 있음
-> - <전체 스코프와 속성 그림> 
 >   - (1) pageContext
 >     - lv를 저장하는 저장소
 >     - 기본객체 request, response가 있음
@@ -513,7 +525,7 @@ public class MyDispatcherServlet extends HttpServlet {
 >   - (4) default mapping : 모든 요청에 대한 매핑
 > 
 > - 스프링에서도 url pattern이 있음. @RequestMapping을 사용함
-> - <URL 패턴, Servlet Context> 
+> - <img src="/images/URL패턴.png" width="400" height="400"/>
 > - 스프링에서는 DispatcherServlet이 Children과 ServletMappingr을 위와 유사한 형태로 서블릿(컨트롤러)들을 가지고 있음
 > - 즉, DispatcherServlet이 URL 매핑과 그에 대한 서블릿(컨트롤러)들을 보관하고 관리하고 있음
 > - 모든 요청은 DispatcherServlet이 받게 되어 있음(Front-Controller). servlet-mapping 을 보면 url-pattern이 '/'로 되어 있음
@@ -524,7 +536,7 @@ public class MyDispatcherServlet extends HttpServlet {
 > - EL 태그란? Expression Language의 약자로, JSP에서 사용하는 표현식 언어를 의미함
 > - <%= ~ %> 을 ${ ~ } 형식으로 작성하게끔 바꿔줌. 이는 여러면에서 편리한 경우가 많음
 > - EL 태그에서 특정 값을 사용할 때 scope를 탐색해서 해당 값을 조회함
-> - <스코프 체인 탐색>
+> - <img src="/images/스코프체인탐색.png" width="400" height="400"/>
 > - 자바에서는 "1" + 1 -> "11" 이지만, EL에서는 "1" + 1 -> 2로 계산함
 > 
 > - empty 는 크게 2가지 부분을 확인해줌
@@ -537,6 +549,7 @@ public class MyDispatcherServlet extends HttpServlet {
 
 #### 👉JSTL
 > - JSTL이란? JSP Standard Tag Library의 약자로, JSP에서 사용하는 표준 태그 라이브러리를 의미함
+> - <img src="/images/JSTL.png" width="400" height="400"/>
 > - 접두사 <c 사용. 형식화에서는 <fmt 사용
 > - 맨위에 설정 라인에 넣어줘야함
 
@@ -545,8 +558,7 @@ public class MyDispatcherServlet extends HttpServlet {
 
 #### 👉Filter
 > - 공통적인 요청 전처리와 응답 후처리에 사용함. 주로 로깅, 인코딩, 수행시간 측정 ... 에 사용함
-> - <Filter 적용 그림>
-> - <Filter 적용 그림2>
+> - <img src="/images/Filter적용그림.png" width="400" height="400"/>
 > - 필터는 n개로 구성할 수 있음. AOP 기능과 유사함
 
 
@@ -556,9 +568,180 @@ public class MyDispatcherServlet extends HttpServlet {
 
 ```java
 // RequestParamTest
+@Controller
+public class RequestParamTest {
+    @RequestMapping("/requestParam")
+    public String main(HttpServletRequest request) {
+        String year = request.getParameter("year");
+//		http://localhost/ch2/requestParam         ---->> year=null
+//		http://localhost/ch2/requestParam?year=   ---->> year=""
+//		http://localhost/ch2/requestParam?year    ---->> year=""
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
 
+    @RequestMapping("/requestParam2")
+//	public String main2(@RequestParam(name="year", required=false) String year) {   // 아래와 동일 
+    public String main2(String year) {
+//		http://localhost/ch2/requestParam2         ---->> year=null
+//		http://localhost/ch2/requestParam2?year    ---->> year=""
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+
+    @RequestMapping("/requestParam3")
+//		public String main3(@RequestParam(name="year", required=true) String year) {   // 아래와 동일 
+    public String main3(@RequestParam String year) {
+//		http://localhost/ch2/requestParam3         ---->> year=null   400 Bad Request. required=true라서 
+//		http://localhost/ch2/requestParam3?year    ---->> year=""
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+
+    @RequestMapping("/requestParam4")
+    public String main4(@RequestParam(required=false) String year) {
+//		http://localhost/ch2/requestParam4         ---->> year=null 
+//		http://localhost/ch2/requestParam4?year    ---->> year=""   
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+
+    @RequestMapping("/requestParam5")
+    public String main5(@RequestParam(required=false, defaultValue="1") String year) {
+//		http://localhost/ch2/requestParam5         ---->> year=1   
+//		http://localhost/ch2/requestParam5?year    ---->> year=1   
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+
+// =======================================================================
+
+    @RequestMapping("/requestParam6")
+    public String main6(int year) {
+//		http://localhost/ch2/requestParam6        ---->> 500 java.lang.IllegalStateException: Optional int parameter 'year' is present but cannot be translated into a null value due to being declared as a primitive type. Consider declaring it as object wrapper for the corresponding primitive type.
+//		http://localhost/ch2/requestParam6?year   ---->> 400 Bad Request, nested exception is java.lang.NumberFormatException: For input string: "" 
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+
+    @RequestMapping("/requestParam7")
+    public String main7(@RequestParam int year) {
+//		http://localhost/ch2/requestParam7        ---->> 400 Bad Request, Required int parameter 'year' is not present
+//		http://localhost/ch2/requestParam7?year   ---->> 400 Bad Request, nested exception is java.lang.NumberFormatException: For input string: "" 
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+
+    @RequestMapping("/requestParam8")
+    public String main8(@RequestParam(required=false) int year) {
+        //	http://localhost/ch2/requestParam8        ---->> 500 java.lang.IllegalStateException: Optional int parameter 'year' is present but cannot be translated into a null value due to being declared as a primitive type. Consider declaring it as object wrapper for the corresponding primitive type.
+        //	http://localhost/ch2/requestParam8?year   ---->> 400 Bad Request, nested exception is java.lang.NumberFormatException: For input string: "" 
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+
+    @RequestMapping("/requestParam9")
+    public String main9(@RequestParam(required=true) int year) {
+        //	http://localhost/ch2/requestParam9        ---->> 400 Bad Request, Required int parameter 'year' is not present
+        //	http://localhost/ch2/requestParam9?year   ---->> 400 Bad Request, nested exception is java.lang.NumberFormatException: For input string: "" 
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+
+    @RequestMapping("/requestParam10")
+    public String main10(@RequestParam(required=true, defaultValue="1") int year) {
+        //	http://localhost/ch2/requestParam10        ---->> year=1   
+        //	http://localhost/ch2/requestParam10?year   ---->> year=1   
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+
+    @RequestMapping("/requestParam11")
+    public String main11(@RequestParam(required=false, defaultValue="1") int year) {
+//		http://localhost/ch2/requestParam11        ---->> year=1   
+//		http://localhost/ch2/requestParam11?year   ---->> year=1   
+        System.out.printf("[%s]year=[%s]%n", new Date(), year);
+        return "yoil";
+    }
+}
 
 // SetterCall
+
+public class SetterCall {
+    public static void main(String[] args) throws Exception{
+        Map<String, String> map = new HashMap<>();
+        map.put("year", "2021");
+        map.put("month", "10");
+        map.put("day", "1");
+
+        Class<?> type = Class.forName("com.fastcampus.ch2.MyDate");
+
+        // MyDate인스턴스를 생성하고, map의 값으로 초기화한다. 
+        Object obj = dataBind(map, type);
+        System.out.println("obj="+obj); // obj=[year=2021, month=10, day=1]
+    } // main
+
+    private static Object dataBind(Map<String, String> map, Class<?> clazz) throws Exception {
+        // 1. MyDate인스턴스 생성
+//		Object obj = clazz.newInstance(); // deprecated method
+        Object obj = clazz.getDeclaredConstructor().newInstance(new Object[0]);
+
+        // 2. MyDate인스턴스의 setter를 호출해서, map의 값으로 MyDate를 초기화
+        // 	 2-1. MyDate의 모든 iv를 돌면서 map에 있는지 찾는다.
+        // 	 2-2. 찾으면, 찾은 값을 setter로 객체에 저장한다.
+        Field[] ivArr = clazz.getDeclaredFields();
+
+        for(int i=0;i<ivArr.length;i++) {
+            String name = ivArr[i].getName();
+            Class<?>  type = ivArr[i].getType();
+
+            // map에 같은 이름의 key가 있으면 가져와서 setter호출 
+            Object value = map.get(name); // 못찾으면 value의 값은 null
+            Method method = null;
+
+            try {   // map에 iv와 일치하는 키가 있을 때만, setter를 호출
+                if(value==null) continue;
+
+                method = clazz.getDeclaredMethod(getSetterName(name), type); // setter의 정보 얻기	
+                System.out.println("method="+method);
+                method.invoke(obj, convertTo(value, type)); // obj의 setter를 호출
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println(Arrays.toString(ivArr));
+
+        return obj;
+    }
+
+    private static Object convertTo(Object value, Class<?> type) {
+        // value의 타입과 type의 타입이 같으면 그대로 반환
+        if(value==null || type==null || type.isInstance(value))
+            return value;
+
+        // value의 타입과 type이 다르면, 변환해서 반환
+        if(String.class.isInstance(value) && type==int.class) // String -> int
+            return Integer.valueOf(""+value);
+
+        return value;
+    }
+
+    // iv의 이름으로 setter의 이름을 만들어서 반환하는 메서드("day" -> "setDay")
+    private static String getSetterName(String name) {
+//		return "set"+name.substring(0,1).toUpperCase()+name.substring(1);
+        return "set" + StringUtils.capitalize(name); // org.springframework.util.StringUtils
+    }
+}
+
+/*
+[실행결과]
+method=public void com.fastcampus.ch2.MyDate.setYear(int)
+method=public void com.fastcampus.ch2.MyDate.setMonth(int)
+method=public void com.fastcampus.ch2.MyDate.setDay(int)
+[private int com.fastcampus.ch2.MyDate.year, private int com.fastcampus.ch2.MyDate.month, private int com.fastcampus.ch2.MyDate.day]
+obj=[year=2021, month=10, day=1]
+ */
 
 ```
 
@@ -573,7 +756,7 @@ public class MyDispatcherServlet extends HttpServlet {
 
 > - 적용대상을 Model 의 속성으로 자동추가해주는 애너테이션
 > - 반환타입 또는 컨트롤러 메서드의 매개변수에 적용 가능함
-> - <매개변수, 반환 타입에 @ModelAttribute 적용>
+> - <img src="/images/ModelAttribute적용그림.png" width="400" height="400"/>
 > - 컨트롤러 파라미터에서 참조형 매개변수 앞에 @ModelAttribute를 생략할 수 있음
 > - 컨트롤러 매개변수에 붙일 수 있는 애노테이션은 2개임
 >   - (1) @RequestParam - 기본형, String에 사용함
@@ -584,7 +767,7 @@ public class MyDispatcherServlet extends HttpServlet {
 
 #### 👉 WebDataBinder 
 
-> - <웹데이터바인더그림>
+> - <img src="/images/웹데이터바인더1.png" width="400" height="400"/>
 > - 컨트롤러 메서드에서 적용되는 객체 
 > - 클라이언트 요청에 담겨있는 데이터에 대한 전처리 작업을 담당함
 > - 크게 2가지 작업을 처리함
@@ -622,7 +805,39 @@ return "redirect:/register/add?msg="+msg;
 
 
 // RequestMappingTest
+@Controller
+public class RequestMappingTest {
+    //  @RequestMapping({"/login/hello.do", "/login/hi.do"}) 
+    @RequestMapping("/login/hello.do") // http://localhost/ch2/login/hello.do
+    public void test1(){
+        System.out.println("urlpattern=/login/hello.do");
+    }
 
+    @RequestMapping("/login/*")   // /login/hello, /login/hi
+    public void test2(){
+        System.out.println("urlpattern=/login/*");
+    }
+
+    @RequestMapping("/login/**/tmp/*.do")   // /login/tmp/hello.do, /login/aaa/tmp/hello.do
+    public void test3(){
+        System.out.println("urlpattern=/login/**/tmp/*.do");
+    }
+
+    @RequestMapping("/login/??")
+    public void test4(){   // /login/hi, /login/my.car
+        System.out.println("urlpattern=/login/??");
+    }
+
+    @RequestMapping("*.do") // /hello.do, /hi.do, /login/hi.do
+    public void test5(){
+        System.out.println("urlpattern=*.do");
+    }
+
+    @RequestMapping("/*.???") //  /hello.aaa, /abc.txt
+    public void test6(){
+        System.out.println("urlpattern=*.???");
+    }
+}
 
 ```
 
@@ -640,7 +855,7 @@ return "redirect:/register/add?msg="+msg;
 
 > - URL에 포함된 non-ASCII 문자를 문자 코드(16 진수) 문자열로 변환함
 > - 요청을 받은 서버가 어떤 OS, 어떤 인코딩을 사용하는지 알 수 없음. 그래서 아스키를 활용해야함(인코딩 처리)
-> - <URL 인코딩 처리 이미지>
+> - <img src="/images/URL인코딩처리.png" width="400" height="400"/>
 > - 문자 코드를 UTF-8 문자열로 변환하는 작업. 문자코드(숫자) <-> 문자열
 > - 브라우저에서 데이터를 전송할 때 브라우저가 URL 인코딩 처리해서 전송함
 
@@ -648,8 +863,8 @@ return "redirect:/register/add?msg="+msg;
 
 #### 👉 redirect와 forward
 
-> - <redirect 처리 과정>
-> - <forward 처리 과정>
+> - <img src="/images/redirect처리과정.png" width="400" height="400"/>
+> - <img src="/images/forward처리과정.png" width="400" height="400"/>
 > - redirect는 요청이 총 2번 이루어지고 각 요청의 request 객체는 서로 다른 객체임
 > - 하지만, forward는 요청이 한 번이고 request 객체도 동일한 객체임
 
@@ -657,7 +872,8 @@ return "redirect:/register/add?msg="+msg;
 
 #### 👉 스프링에서 Redirect와 Forward 처리 과정
 
-> - <DS 그림>
+> - <img src="/images/스프링redirect처리과정.png" width="400" height="400"/>
+> - <img src="/images/스프링forward처리과정.png" width="400" height="400"/>
 > - redirect가 일어날 경우, DS는 RedirectView를 호출해서 리다이렉트를 담은 응답 정보를 생성하고 클라이언트에게 전달함
 > - 컨트롤러에서 String인 뷰 이름을 반환하면 DS는 InternalResourceViewResolver를 통해서 뷰이름을 해석해서 실제 리소스 위치를 생성함
 > - DS는 다시 해당 위치 정보를 JstlView에게 전달하고 JstlView는 해당 JSP에게 Model을 넘겨줌
@@ -677,8 +893,8 @@ return "redirect:/register/add?msg="+msg;
 > - HTTP 응답/요청 헤더에 쿠기가 등록된 상태로 전달됨
 > 
 > - 쿠키 생성 및 삭제 
-> - <쿠키의 생성>
-> - <쿠키의 삭제와 변경>
+> - <img src="/images/쿠키생성.png" width="400" height="400"/>
+> - <img src="/images/쿠키삭제.png" width="400" height="400"/>
 > - 쿠키 삭제할 때는 유효기간을 0으로 설정해주면됨
 > - 쿠키에 한글, ... 을 저장할 때는 URLEncoder를 통해 인코딩해서 저장해야함
 
@@ -698,13 +914,18 @@ return "redirect:/register/add?msg="+msg;
 <br>
 
 #### 👉 쿠키 VS 세션
+> - <img src="/images/쿠키세션비교.png" width="400" height="400"/>
 
-> - <쿠키 vs 세션>
 
 <br>
 
 #### 👉 세션 실습
 
+> - <img src="/images/세션실습1.png" width="400" height="400"/>
+> - <img src="/images/세션실습2.png" width="400" height="400"/>
+> - <img src="/images/세션실습3.png" width="400" height="400"/>
+> - <img src="/images/세션실습4.png" width="400" height="400"/>
+> - <img src="/images/세션실습5.png" width="400" height="400"/>
 > - 개발을 진행하기 앞서 항상 그림을 그려서 작업틀을 구상해 놓아야함
 > - 그림 그리는 것이 설계임
 > - 메인 화면에서 메뉴 부분에서 Login/Logout을 보여줄 때 세션 스코프에 아이디가 있는지 없는지 여부로 처리함
@@ -729,13 +950,56 @@ return "redirect:/register/add?msg="+msg;
 
 ```java
 // ExceptionController - 특정 컨트롤러에서 발생하는 예외 처리기 
+@Controller
+public class ExceptionController {
+    @ExceptionHandler({NullPointerException.class, FileNotFoundException.class})
+    public String catcher2(Exception ex, Model m) {
+        m.addAttribute("ex", ex);
+        return "error";
+    }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 200 -> 500
+    public String catcher(Exception ex, Model m) {
+        System.out.println("catcher() in ExceptionController");
+        System.out.println("m="+m);
+//		m.addAttribute("ex", ex);
+
+        return "error";
+    }
+
+    @RequestMapping("/ex")
+    public String main(Model m) throws Exception {
+        m.addAttribute("msg", "message from ExceptionController.main()");
+        throw new Exception("¿¹¿Ü°¡ ¹ß»ýÇß½À´Ï´Ù.");
+    }
+
+    @RequestMapping("/ex2")
+    public String main2() throws Exception {
+        throw new NullPointerException("¿¹¿Ü°¡ ¹ß»ýÇß½À´Ï´Ù.");
+    }
+}
 
 // GlobalController - 전역 예외 처리기 
 
+@ControllerAdvice("com.fastcampus.ch3") 
+public class GlobalCatcher {
+    @ExceptionHandler({NullPointerException.class, FileNotFoundException.class})
+    public String catcher2(Exception ex, Model m) {
+        m.addAttribute("ex", ex);
+        return "error";
+    }
 
+    @ExceptionHandler(Exception.class)
+    public String catcher(Exception ex, Model m) {
+        m.addAttribute("ex", ex);
+
+        return "error";
+    }
+}
 ```
-
+> - <img src="/images/예외처리1.png" width="400" height="400"/>
+> - <img src="/images/예외처리2.png" width="400" height="400"/>
 > - 컨트롤러에서 발생되는 공통에러를 처리하는 메서드를 만들 수 있음. 이때, 사용되는 것이 @ExcceptionHandler 애노테이션임
 > - 어떤 예외일 때 해당 메서드가 호출되는지 지정할 수 있음
 > - 그렇게 하면 해당 예외들은 @ExceptionHandler에 명시해야함
@@ -755,13 +1019,29 @@ return "redirect:/register/add?msg="+msg;
 
 ```java
 // (1) 예외 처리 매서드에 붙이는 경우
+@Controller
+public class ExceptionController {
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 200 -> 500
+    public String catcher(Exception ex, Model m) {
+        System.out.println("catcher() in ExceptionController");
+        System.out.println("m="+m);
+        return "error";
+    }
+}
 
 // (2) 사용자 예외 클래스에 붙이는 경우 
+@ResponseStatus(HttpStatus.BAD_REQUEST) // 500 -> 400
+class MyException extends RuntimeException {
+    MyException(String msg) {
+        super(msg);
+    }
+    MyException() { this(""); }
+}
 
 // JSP 맨 위에 선언 라인에 <%@ page isErrorPage="true" %>를 추가해야함
-
 // <error-page> 태그를 사용함
-
 // servlet-context.xml에 등록함 
 ```
 
@@ -784,7 +1064,33 @@ return "redirect:/register/add?msg="+msg;
 
 ```java
 // DispatcherServlet.properties 설정 파일 
+# Default implementation classes for DispatcherServlet's strategy interfaces.
+        # Used as fallback when no matching beans are found in the DispatcherServlet context.
+# Not meant to be customized by application developers.
 
+org.springframework.web.servlet.LocaleResolver=org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver
+
+org.springframework.web.servlet.ThemeResolver=org.springframework.web.servlet.theme.FixedThemeResolver
+
+org.springframework.web.servlet.HandlerMapping=org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping,\
+org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping,\
+org.springframework.web.servlet.function.support.RouterFunctionMapping
+
+org.springframework.web.servlet.HandlerAdapter=org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter,\
+org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter,\
+org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter,\
+org.springframework.web.servlet.function.support.HandlerFunctionAdapter
+
+
+org.springframework.web.servlet.HandlerExceptionResolver=org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver,\
+org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver,\
+org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver
+
+org.springframework.web.servlet.RequestToViewNameTranslator=org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator
+
+org.springframework.web.servlet.ViewResolver=org.springframework.web.servlet.view.InternalResourceViewResolver
+
+org.springframework.web.servlet.FlashMapManager=org.springframework.web.servlet.support.SessionFlashMapManager
 ```
 
 > - ExceptionResolver 처리 과정 설명, 컨트롤러에서 발생할 예외가 DS에 넘어옴
@@ -816,11 +1122,11 @@ return "redirect:/register/add?msg="+msg;
 
 #### 👉 DispatcherServlet 파헤치기
 
-> - <DispatcherServlet 그림>
-> - <HandlerMapping 처리>
-> - <HandlerAdapter 처리>
-> - <ViewResolver 처리>
-> - <DispatcherServlet 전체 그림>
+> - <img src="/images/DS1.png" width="400" height="400"/>
+> - <img src="/images/DS2.png" width="400" height="400"/>
+> - <img src="/images/DS3.png" width="400" height="400"/>
+> - <img src="/images/DS4.png" width="400" height="400"/>
+> - <img src="/images/DS5.png" width="400" height="400"/>
 > - 서블릿은 기본적으로 '입력/처리/출력' 형식으로 구성됨
 > - 이를 효율적으로 처리하기 위해선 그 앞단에 DS를 둬서 전처리 작업을 처리함(Front-Controller)
 > - 물론 DS는 전처리 말고도 여러 작업을 처리함 
@@ -856,10 +1162,33 @@ return "redirect:/register/add?msg="+msg;
 
 ```java
 // RegisterController 데이터 변환 기능 처리 
+@Controller 
+public class RegisterController {
+    @GetMapping("/register/add") // 4.3부터 추가
+    public String register() {
+        return "registerForm";  // WEB-INF/views/registerForm.jsp
+    }
+    
+    @PostMapping("/register/add")
+    public String save(@ModelAttribute("user") User user, Model m) {
+        if(!isValid(user)) {
+            String msg = URLEncoder.encode("id를 잘못입력하셨습니다.", "utf-8");
 
+            m.addAttribute("msg", msg);
+            return "redirect:/register/add"; // 신규회원 가입화면으로 이동(redirect)
+        }
+
+        return "registerInfo";
+    }
+
+    private boolean isValid(User user) {
+        return false;
+    }
+
+}
 ```
 
-> - <WebDataBinder 그림>
+> - <img src="/images/웹데이터바인더.png" width="400" height="400"/>
 > - WebDataBinder가 데이터 변환과 검증을 처리함
 > - String인 "2021/12/31" 을 Date로 변환하는 기능 추가함
 > - @InitBinder로 메서드를 정의하여 변환기를 등록할 수 있음
@@ -890,9 +1219,35 @@ return "redirect:/register/add?msg="+msg;
 
 ```java
 // Validator 인터페이스
+public interface Validator {
+    boolean supports(Class<?> clazz);
+    void validate(Object target, Errors errors);
+}
 
 // UserValidator 클래스
+public class UserValidator implements Validator {
+    @Override
+    public boolean supports(Class<?> clazz) {
+//			return User.class.equals(clazz); // 검증하려는 객체가 User타입인지 확인
+        return User.class.isAssignableFrom(clazz); // clazz가 User 또는 그 자손인지 확인
+    }
 
+    @Override
+    public void validate(Object target, Errors errors) {
+        System.out.println("LocalValidator.validate() is called");
+
+        User user = (User)target;
+
+        String id = user.getId();
+        
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "id",  "required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pwd", "required");
+
+        if(id==null || id.length() <  5 || id.length() > 12) {
+            errors.rejectValue("id", "invalidLength");
+        }
+    }
+}
 
 // Validator를 이용한 검증 자동 
 
@@ -902,7 +1257,10 @@ return "redirect:/register/add?msg="+msg;
 // registerController, UserValidator 
 
 // MessageSource 인터페이스 
-
+public interface MessageSource {
+    String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage Locale locale);
+    String getMessage(String code, @Nullable Object[] args, Locale locale) throws NoSuchMessageException;
+}
 ```
 
 > - Validator란? 객체를 검증하기 위한 인터페이스, 객체 거증기 구현에서 사용함 
