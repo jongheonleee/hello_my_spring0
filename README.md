@@ -24,7 +24,7 @@ public class HelloController {
 ```
 
 
-> - <img src="/images/아직.jpeg" width="400" height="400"/>
+> - <img src="/images/원격프로그램실행.jpeg" width="400" height="400"/>
 > - 원격으로 프로그램을 실행하려면 다음과 같이 2가지 작업을 해야함
 >   - (1) 프로그램 등록
 >   - (2) 요청 url 매핑 
@@ -38,7 +38,7 @@ public class HelloController {
 
 #### 👉 HttpServletRequest와 HttpServletResponse
 
-> - <img src="/images/아직.jpeg" width="400" height="400"/>
+> - <img src="/images/HttpServletRequest와HttpServletResponse.jpeg" width="400" height="400"/>
 > - HttpServletRequest란? 요청 정보를 저장하고 있는 객체를 의미함
 >   - url 자체는 문자열. 해당 요청 문자열을 저장하고 활용할 수 있게 해주는 객체
 >   - 한마디로 url 요청 문자열을 저장하고 있는 객체를 의미함
@@ -51,6 +51,7 @@ public class HelloController {
 
 #### 👉 서버가 제공하는 리소스
 
+> - <img src="/images/리소스종류.jpeg" width="400" height="400"/>
 > - 리소스는 크게 2가지로 나뉨
 >   - (1) 동적 리소스 : 계속해서 변화는 리소스
 >     - 스트리밍, 프로그램, ...
@@ -71,7 +72,6 @@ public class HelloController {
 > 
 > - Web Server란? 브라우저를 통해 사용할 수 있는 모든 종류의 서비스를 제공하는 서버
 > - 하나의 서버에 여러 종류의 서버가 같이 있는 경우, 포트 번호로 구분하여 통신함
-> - <img src="/images/서버여러대포트번호.jpeg" width="400" height="400"/>
 > - binding이란? 포트번호와 서버가 연결되는 것을 말함. listening은 서버는 binding된 포트번호로부터 클라이언트 요청을 기다림
 
 <br>
@@ -89,7 +89,7 @@ public class HelloController {
 
 #### 👉 Tomcat 서버 내부 구조
 
-> - <img src="/images/Tomcat내부구조.jpeg" width="400" height="400"/>
+> - <img src="/images/Tomcat구조.jpeg" width="400" height="400"/>
 > - 서블릿이란? 작은 서버 프로그램을 의미함. 예를들어, 컨트롤러, ... 이 있음
 > - 요청처리 전과정은 밑에와 같음
 >   - Thread -> Connector -> Engine -> filter -> DispatcherServlet -> Controller -> 매핑된 메서드 호출 
@@ -99,6 +99,7 @@ public class HelloController {
 
 #### 👉 Tomcat의 설정 파일
 
+> - <img src="/images/Tomcat설정파일.jpeg" width="400" height="400"/>
 > - Tomcat의 설정 파일은 크게 2가지로 나눌 수 있음
 >   - (1) server.xml : Tomcat 서버 설정 파일 
 >     - Tomcat 설치경로/conf/server.xml
