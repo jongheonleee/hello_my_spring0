@@ -1317,6 +1317,18 @@ public interface MessageSource {
 > - 스프링 빈에는 크게 2가지 스코프가 있음. 하나는 Singleton, 다른 하나는 Prototype임
 
 
+<br>
+
+#### 👉 Root AC와 Servlet AC
+
+> - <img src="/images/RootAC와ServletAC1.png" width="400" height="400"/>
+> - <img src="/images/RootAC와ServletAC2.png" width="400" height="400"/>
+> - <img src="/images/RootAC와ServletAC3.png" width="400" height="400"/>
+> - <img src="/images/RootAC와ServletAC4.png" width="400" height="400"/>
+> - <img src="/images/RootAC와ServletAC5.png" width="400" height="400"/>
+> - 스프링이 web.xml 설정 파일을 읽어서 두 개의 AC를 생성하고 서로 연결함(부모 자식 관계)
+> - 하나는 none-web이고 다른 하나는 web임. 서로 부모 자식 관계로 구성됨
+
 
 ## 📌 04. MyBatis로 게시판 구현
 
