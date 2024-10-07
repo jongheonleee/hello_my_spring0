@@ -1288,6 +1288,7 @@ public interface MessageSource {
 
 #### 👉 Spring DI 흉내내기
 
+
 > - <img src="/images/다형성.png" width="400" height="400"/>
 > - <img src="/images/외부파일1.png" width="400" height="400"/>
 > - <img src="/images/외부파일2.png" width="400" height="400"/>
@@ -1328,6 +1329,225 @@ public interface MessageSource {
 > - <img src="/images/RootAC와ServletAC5.png" width="400" height="400"/>
 > - 스프링이 web.xml 설정 파일을 읽어서 두 개의 AC를 생성하고 서로 연결함(부모 자식 관계)
 > - 하나는 none-web이고 다른 하나는 web임. 서로 부모 자식 관계로 구성됨
+
+<br>
+
+#### 👉 IoC와 DI 
+
+> - IoC란? 제어의 역전을 의미함
+> - 제어의 흐름을 전통적인 방식과 다르게 뒤바꾸는 것을 말함
+> - DI란? 의존성 주입을 의미함
+> - IoC과정에서 많이 사용하는 기법임 
+
+<br>
+
+#### 👉 @Autowired 활용
+
+> - iv, setter, 참조형 매개변수를 가진 생성자, 메서드에 적용 가능함
+> - 생성자에 @Autowired를 사용하는 것을 권장함
+> - 스프링 컨테이너에서 '타입'으로 빈을 검색해서 참조 변수에 자동 주입(DI)함
+> - 검색된 빈이 n개라면, 그중에 참조변수와 이름이 일치하는 것을 주입
+> - 주입 대상이 변수일 때, 검색된 빈이 1개가 아니면 예외발생함
+> - 주입 대상이 배열일 때, 검색된 빈이 n개라도 예외 발생안함
+
+
+<br>
+
+#### 👉 @Resource 활용
+
+> - 스프링 컨테이너에서 '이름'으로 빈을 검색해서 참조 변수에 자동 주입(DI)함
+> - 일치하는 이름의 빈이 없으면 예외발생함
+
+<br>
+
+#### 👉 @Component 활용
+
+> - <component-scan>로 @Component가 클래스를 자동 검색해서 빈으로 등록해줌
+
+<br>
+
+#### 👉 @Value와 @PropertySource
+
+> - <img src="/images/.png" width="400" height="400"/>
+
+
+<br>
+
+#### 👉 스프링 애너테이션 vs 표준 애너테이션 
+
+> - <img src="/images/.png" width="400" height="400"/>
+
+
+<br>
+
+#### 👉 Transaction, Commit, Rollback
+
+> - Transaction이란? 더이상 나눌 수 없는 작업 단위. 여러 작업을 하나의 작업으로 묶음
+> - 계좌 이체의 경우, 출금과 입금이 하나의 tx로 묶어야함
+
+<br>
+
+#### 👉 Transaction의 속성 - ACID
+
+> - 원자성(Atomicity) 
+>   - 나눌 수 없는 하나의 작업으로 다뤄져야함
+> 
+> - 일관성(Consistency)
+>   - tx 수행 전과 후가 일관된 상태를 유지해야함
+> 
+> - 고립성(Isolation)
+>   - 각 tx는 독립적으로 수행되야함
+> 
+> - 영속성(Durability)
+>   - 성공한 tx의 결과는 유지되야함
+
+<br>
+
+#### 👉 커밋과 롤백
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - 커밋 : 작업 내용을 DB에 영구적으로 전달하는 것
+> - 롤백 : 최근 변경사항을 취소(마지막 커밋으로 복귀 )
+
+<br>
+
+#### 👉 TX의 isolation level
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - 각 tx를 고립시키는 정도를 4가지 레벨로 구성함
+
+<br>
+
+#### 👉 READ UNCOMMITTED
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - 커밋되지 않은 데이터를 읽기 가능
+> - isolation level에서 가장 낮은 레벨(dirty read)
+
+<br>
+
+#### 👉 READ COMMITTED
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - 커밋된 데이터만 읽기 가능
+> - pahntom read라고도 함
+
+<br>
+
+#### 👉 REPEATABLE READ
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - tx 시작 후 다른 tx의 변경을 무시됨
+
+<br>
+
+#### 👉 SERIALIZABLE 
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - 한번에 하나의 tx만 독립적으로 수행함
+
+<br>
+
+#### 👉 AOP의 개념과 용어 1
+
+```java
+public class AopMain {
+    public static void main(String[] args) throws Exception {
+        MyAdvice myAdvice = new MyAdvice();
+
+        Class myClass = Class.forName("com.fastcampus.ch3.aop.MyClass");
+        Object obj = myClass.newInstance();
+
+        for(Method m : myClass.getDeclaredMethods()) {
+            myAdvice.invoke(m, obj, null);
+        }
+    }
+}
+
+class MyAdvice {
+    Pattern p = Pattern.compile("a.*");
+
+    boolean matches(Method m){
+        Matcher matcher = p.matcher(m.getName());
+        return matcher.matches();
+    }
+
+    void invoke(Method m, Object obj, Object... args) throws Exception {
+        if(m.getAnnotation(Transactional.class)!=null)
+            System.out.println("[before]{");
+
+        m.invoke(obj, args); // aaa(), aaa2(), bbb() 호출가능
+
+        if(m.getAnnotation(Transactional.class)!=null)
+            System.out.println("}[after]");
+    }
+}
+
+class MyClass {
+    @Transactional
+    void aaa() {
+        System.out.println("aaa() is called.");
+    }
+    void aaa2() {
+        System.out.println("aaa2() is called.");
+    }
+    void bbb() {
+        System.out.println("bbb() is called.");
+    }
+}
+```
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - 중복 코드를 효율적으로 다루는 기술
+> - 부가기능이 되는 로직을 담당하는 클래스를 정의해서 사용함. 이 부분이 핵심임. 애플리케이션 전체에 산재해있는 부가기능을 모듈화해서 사용하는 것
+> - 핵심기능과 부가기능을 분리시킴. 이 과정에서 reflection API를 사용함
+> - 부가기능을 적용할 대상의 패턴을 확인하거나 애노테이션이 적용됬는지를 확인해서 AOP를 적용해줄 수 있음
+> - AOP를 통해 코드를 추가하는 부분은 위와 아래도 구성됨(물론, 프록시를 이용한 AOP에 한해서만 설명)
+>   - AROUND = BEFORE + AFTER
+>     - BEFORE : 위
+>     - AFTER : 아래 
+
+<br>
+
+#### 👉 AOP의 개념과 용어 2 
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/.png" width="400" height="400"/>
+> - 관점 지향 프로그래밍이라고함
+> - 런타임 시에 부가기능(Advice)를 동적으로 추가해주는 기술을 말함
+> - 간단하게, 메서드의 시작 또는 끝에 자동으로 코드 추가해줌 
+
+<br>
+
+#### 👉 Advice의 종류 
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - Advice의 설정은 xml과 애노테이션 두 가지 방법으로 가능 
+
+<br>
+
+#### 👉 pointcut expression 
+```java
+
+```
+
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/.png" width="400" height="400"/>
+
+
+<br>
+
+#### 👉 @Transactional의 속성 
+
+> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/.png" width="400" height="400"/>
+> - @Transactional은 기본적으로 Runtime Exception, error만 롤백처리함
+> - 다른 예외도 적용 시키려면 rollbackFor 속성을 통해 지정해줄 수 있음 
+
+
 
 
 ## 📌 04. MyBatis로 게시판 구현
