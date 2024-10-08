@@ -1535,6 +1535,28 @@ class MyClass {
 #### 👉 pointcut expression 
 ```java
 
+@Aspect
+@Component
+public class LoggingAspect {
+
+    // Pointcut 표현식을 사용한 간단한 @Before 예시
+    @Before("execution(* com.example.service.UserService.*(..))")
+    public void logBeforeMethod() {
+        System.out.println("A method in UserService is about to be called.");
+    }
+}
+
+@Service
+public class UserService {
+
+    public void createUser() {
+        System.out.println("Creating a new user.");
+    }
+
+    public void deleteUser() {
+        System.out.println("Deleting a user.");
+    }
+}
 ```
 
 
