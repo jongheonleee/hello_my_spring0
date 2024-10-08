@@ -1334,6 +1334,8 @@ public interface MessageSource {
 
 #### 👉 IoC와 DI 
 
+> - <img src="/images/IoC와 DI1.png" width="400" height="400"/>
+> - <img src="/images/IoC와 DI2.png" width="400" height="400"/>
 > - IoC란? 제어의 역전을 의미함
 > - 제어의 흐름을 전통적인 방식과 다르게 뒤바꾸는 것을 말함
 > - DI란? 의존성 주입을 의미함
@@ -1343,6 +1345,7 @@ public interface MessageSource {
 
 #### 👉 @Autowired 활용
 
+> - <img src="/images/@Autowired%20활용.png" width="400" height="400"/>
 > - iv, setter, 참조형 매개변수를 가진 생성자, 메서드에 적용 가능함
 > - 생성자에 @Autowired를 사용하는 것을 권장함
 > - 스프링 컨테이너에서 '타입'으로 빈을 검색해서 참조 변수에 자동 주입(DI)함
@@ -1368,14 +1371,14 @@ public interface MessageSource {
 
 #### 👉 @Value와 @PropertySource
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/@Value와@PropertySource.png" width="400" height="400"/>
 
 
 <br>
 
 #### 👉 스프링 애너테이션 vs 표준 애너테이션 
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/스프링애너테이션과표준애너테이션.png" width="400" height="400"/>
 
 
 <br>
@@ -1389,6 +1392,7 @@ public interface MessageSource {
 
 #### 👉 Transaction의 속성 - ACID
 
+> - <img src="/images/트랜잭션.png" width="400" height="400"/>
 > - 원자성(Atomicity) 
 >   - 나눌 수 없는 하나의 작업으로 다뤄져야함
 > 
@@ -1405,7 +1409,8 @@ public interface MessageSource {
 
 #### 👉 커밋과 롤백
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/커밋과롤백.png" width="400" height="400"/>
+> - <img src="/images/자동커밋과수동커밋.png" width="400" height="400"/>
 > - 커밋 : 작업 내용을 DB에 영구적으로 전달하는 것
 > - 롤백 : 최근 변경사항을 취소(마지막 커밋으로 복귀 )
 
@@ -1413,14 +1418,14 @@ public interface MessageSource {
 
 #### 👉 TX의 isolation level
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/TX의isolationlevel.png" width="400" height="400"/>
 > - 각 tx를 고립시키는 정도를 4가지 레벨로 구성함
 
 <br>
 
 #### 👉 READ UNCOMMITTED
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/READUNCOMMITTED.png" width="400" height="400"/>
 > - 커밋되지 않은 데이터를 읽기 가능
 > - isolation level에서 가장 낮은 레벨(dirty read)
 
@@ -1428,7 +1433,7 @@ public interface MessageSource {
 
 #### 👉 READ COMMITTED
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/READCOMMITTED.png" width="400" height="400"/>
 > - 커밋된 데이터만 읽기 가능
 > - pahntom read라고도 함
 
@@ -1436,14 +1441,14 @@ public interface MessageSource {
 
 #### 👉 REPEATABLE READ
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/REPEATABLEREAD.png" width="400" height="400"/>
 > - tx 시작 후 다른 tx의 변경을 무시됨
 
 <br>
 
 #### 👉 SERIALIZABLE 
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/SERIALIZABLE.png" width="400" height="400"/>
 > - 한번에 하나의 tx만 독립적으로 수행함
 
 <br>
@@ -1497,7 +1502,7 @@ class MyClass {
 }
 ```
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/AOP개념과용어1.png" width="400" height="400"/>
 > - 중복 코드를 효율적으로 다루는 기술
 > - 부가기능이 되는 로직을 담당하는 클래스를 정의해서 사용함. 이 부분이 핵심임. 애플리케이션 전체에 산재해있는 부가기능을 모듈화해서 사용하는 것
 > - 핵심기능과 부가기능을 분리시킴. 이 과정에서 reflection API를 사용함
@@ -1511,8 +1516,9 @@ class MyClass {
 
 #### 👉 AOP의 개념과 용어 2 
 
-> - <img src="/images/.png" width="400" height="400"/>
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/AOP개념과용어2.png" width="400" height="400"/>
+> - <img src="/images/AOP개념과용어3.png" width="400" height="400"/>
+> - <img src="/images/AOP관련용어.png" width="400" height="400"/>
 > - 관점 지향 프로그래밍이라고함
 > - 런타임 시에 부가기능(Advice)를 동적으로 추가해주는 기술을 말함
 > - 간단하게, 메서드의 시작 또는 끝에 자동으로 코드 추가해줌 
@@ -1521,7 +1527,7 @@ class MyClass {
 
 #### 👉 Advice의 종류 
 
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/ADVICE종류.png" width="400" height="400"/>
 > - Advice의 설정은 xml과 애노테이션 두 가지 방법으로 가능 
 
 <br>
@@ -1532,18 +1538,18 @@ class MyClass {
 ```
 
 
-> - <img src="/images/.png" width="400" height="400"/>
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/pointcut expression1.png" width="400" height="400"/>
+> - <img src="/images/pointcut expression2.png" width="400" height="400"/>
 
 
 <br>
 
 #### 👉 @Transactional의 속성 
 
-> - <img src="/images/.png" width="400" height="400"/>
-> - <img src="/images/.png" width="400" height="400"/>
-> - <img src="/images/.png" width="400" height="400"/>
-> - <img src="/images/.png" width="400" height="400"/>
+> - <img src="/images/@Transactional의 속성1.png" width="400" height="400"/>
+> - <img src="/images/@Transactional의 속성2.png" width="400" height="400"/>
+> - <img src="/images/@Transactional의 속성3.png" width="400" height="400"/>
+> - <img src="/images/@Transactional의 속성4.png" width="400" height="400"/>
 > - @Transactional은 기본적으로 Runtime Exception, error만 롤백처리함
 > - 다른 예외도 적용 시키려면 rollbackFor 속성을 통해 지정해줄 수 있음 
 
