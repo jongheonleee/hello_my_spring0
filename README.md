@@ -1378,7 +1378,7 @@ public interface MessageSource {
 
 #### 👉 스프링 애너테이션 vs 표준 애너테이션 
 
-> - <img src="/images/스프링애너테이션과표준애너테이션.png" width="400" height="400"/>
+> - <img src="/images/애너테이션비교.png" width="400" height="400"/>
 
 
 <br>
@@ -1527,7 +1527,7 @@ class MyClass {
 
 #### 👉 Advice의 종류 
 
-> - <img src="/images/ADVICE종류.png" width="400" height="400"/>
+> - <img src="/images/advice종류.png" width="400" height="400"/>
 > - Advice의 설정은 xml과 애노테이션 두 가지 방법으로 가능 
 
 <br>
