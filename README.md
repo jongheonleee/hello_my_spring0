@@ -40,12 +40,16 @@ public class HelloController {
 
 > - <img src="/images/HttpServletRequest와HttpServletResponse.jpeg" width="400" height="400"/>
 > - HttpServletRequest란? 요청 정보를 저장하고 있는 객체를 의미함
+>   - HttpServletRequest는 클라이언트가 보낸 HTTP 요청 메시지를 자바 객체로 표현한 것
 >   - url 자체는 문자열. 해당 요청 문자열을 저장하고 활용할 수 있게 해주는 객체
 >   - 한마디로 url 요청 문자열을 저장하고 있는 객체를 의미함
+>   - 또한, HTTP의 요청 메시지에 담겨있는 바디 부분의 데이터도 저장하고 있음 
 >   
 > - HttpServletResponse란? 응답 정보를 저장하고 있는 객체를 의미함
->   - 브라우저에 정보를 보여줄 때 활용함
->   - 해당 객체를 이용해서 자바코드로 HTML ... 을 만들어서 브라우저에서 보여줄 수 있음
+>   - HttpServletResponse는 서버가 클라이언트에게 보내는 HTTP 응답 메시지를 자바 객체로 표현한 것
+>   - HTTP 응답 데이터 자체를 다루는 객체임
+>   - Model은 '요청을 처리하고 계산된 데이터를 담는 객체로서 뷰 페이지를 렌더링할 때 사용'
+>   - HttpServletResponse는 'HTTP 응답 자체를 다루는 객체로서 응답 메시지 헤더나 상태 코드 등을 세부적으로 다룰 수 있음'
 
 <br>
 
@@ -56,8 +60,8 @@ public class HelloController {
 >   - (1) 동적 리소스 : 계속해서 변화는 리소스
 >     - 스트리밍, 프로그램, ...
 >   
->  - (2) 정적 리소스 : 변하지 않고 고정되어 있는 리소스
->    - 이미지, 파일, HTML, CSS, JS, ...
+>   - (2) 정적 리소스 : 변하지 않고 고정되어 있는 리소스
+>     - 이미지, 파일, HTML, CSS, JS, ...
 
 <br>
 
@@ -83,7 +87,7 @@ public class HelloController {
 >   - Web Application Server의 약자로, 웹 어플리케이션을 서비스하는 서버를 의미함
 >   - 클라이언트에게 웹과 관련된 프로그램을 제공하는 서버
 > - 서블릿이란?
->   - 서블릿은 자바로 만들어진 웹 프로그램을 의미함. 즉, 작은 서버 프로그램을 의미함
+>   - 서블릿은 작은 서버 프로그램을 의미함
 
 <br>
 
@@ -196,7 +200,7 @@ public class HelloController {
 > - 64개 -> 2^6 -> 6비트로 구성된 데이터
 > - 데이터를 6비트로 쪼갬
 > - 바이너리 데이터를 텍스트 데이터로 변환하기 위해 사용함(숫자 -> 문자 변환)
-> - 64진법 '0' ~ '9', 'A'~'Z', 'a'~'z', '+', '/'는 어떤 OS에서든 호환 가능함(한글 OS, 아랍 OS)
+> - 64진법 `'0'~'9', 'A'~'Z', 'a'~'z', '+', '/'`는 어떤 OS에서든 호환 가능함(한글 OS, 아랍 OS)
 > - 위의 작업의 단점은 사이즈가 커짐
 >   - 8bit + 8 bit -> 6bit + 6bit + 6bit + 6bit 
 
